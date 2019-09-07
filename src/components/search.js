@@ -7,27 +7,50 @@ import Book from "./book";
 class SearchBar extends React.Component {
   state = {
     searchedBooks: [],
-    query: ""
+    text: "",
+    noResults: false,
+    emptyText: false
   };
 
-  searchText = e => {
-    const text = e.target.value;
-    this.setState({
-      query: text
+  onChangeHandler = async e => {
+    await this.setState({
+      text: e.target.value
     });
-    BooksAPI.search(this.state.query, "10").then(books => {
-      if (typeof books !== "undefined") {
-        books.length > 0
-          ? this.setState({
-              searchedBooks: books
-            })
-          : this.setState({
-              searchedBooks: []
-            });
-      }
-    });
+    if (this.state.text === "") {
+      this.setState({
+        searchedBooks: []
+      });
+    }
   };
+
+  onSubmitHandler = e => {
+    e.preventDefault();
+    this.state.text !== ""
+      ? BooksAPI.search(this.state.text).then(books => {
+          books.length > 0
+            ? this.setState({
+                searchedBooks: books,
+                noResults: false,
+                emptyText: false
+              })
+            : this.setState({
+                searchedBooks: [],
+                noResults: true,
+                emptyText: false
+              });
+        })
+      : this.setState({
+          searchedBooks: [],
+          noResults: true,
+          emptyText: true
+        });
+  };
+
   render() {
+    console.log(this.state.text);
+    console.log(this.state.searchedBooks, "Books");
+    console.log(this.state.noResults, "No Result");
+    console.log(this.state.emptyText, "Empty String");
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -35,22 +58,31 @@ class SearchBar extends React.Component {
             <button className="close-search">Close</button>
           </Link>
           <div className="search-books-input-wrapper">
-            <input
-              type="text"
-              placeholder="Search by title or author"
-              value={this.state.query}
-              onChange={this.searchText}
-            />
+            <form onSubmit={this.onSubmitHandler}>
+              <input
+                type=""
+                placeholder="Search by title or author"
+                value={this.state.text}
+                onChange={this.onChangeHandler}
+              />
+            </form>
           </div>
         </div>
 
-        <div className="search-books-results">
+        <div className="search-books-results" />
+        {this.state.noResults ? (
+          this.state.emptyText ? (
+            <div>Type Something First !</div>
+          ) : (
+            <div>there is no Books with this name</div>
+          )
+        ) : (
           <ol className="books-grid">
             {this.state.searchedBooks.map(item => (
-              <Book book={item} />
+              <Book book={item} key={item.id} />
             ))}
           </ol>
-        </div>
+        )}
       </div>
     );
   }
