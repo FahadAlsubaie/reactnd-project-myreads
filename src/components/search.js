@@ -47,6 +47,7 @@ class SearchBar extends React.Component {
   };
 
   render() {
+    const { allBooks, shelfShift } = this.props;
     console.log(this.state.text);
     console.log(this.state.searchedBooks, "Books");
     console.log(this.state.noResults, "No Result");
@@ -55,7 +56,9 @@ class SearchBar extends React.Component {
       <div className="search-books">
         <div className="search-books-bar">
           <Link to="/">
-            <button className="close-search">Close</button>
+            <button className="close-search" onClick={this.props.return}>
+              Close
+            </button>
           </Link>
           <div className="search-books-input-wrapper">
             <form onSubmit={this.onSubmitHandler}>
@@ -78,8 +81,13 @@ class SearchBar extends React.Component {
           )
         ) : (
           <ol className="books-grid">
-            {this.state.searchedBooks.map(item => (
-              <Book book={item} key={item.id} />
+            {this.state.searchedBooks.map(book => (
+              <Book
+                book={book}
+                key={book.id}
+                shelfShift={shelfShift}
+                allBooks={allBooks}
+              />
             ))}
           </ol>
         )}

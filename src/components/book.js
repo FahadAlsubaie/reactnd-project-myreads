@@ -4,7 +4,7 @@ import ShelfShifter from "./shelfShifter";
 
 class Book extends React.Component {
   render() {
-    const { book } = this.props;
+    const { allBooks, book, shelfShift } = this.props;
     return (
       <li>
         <div className="book">
@@ -17,7 +17,11 @@ class Book extends React.Component {
                 backgroundImage: `url(${book.imageLinks.thumbnail})`
               }}
             />
-            <ShelfShifter />
+            <ShelfShifter
+              book={book}
+              shelfShift={shelfShift}
+              allBooks={allBooks}
+            />
           </div>
           <div className="book-title">{book.title}</div>
           <div className="book-authors">{book.authors}</div>
