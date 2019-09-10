@@ -48,10 +48,6 @@ class SearchBar extends React.Component {
 
   render() {
     const { allBooks, shelfShift } = this.props;
-    console.log(this.state.text);
-    console.log(this.state.searchedBooks, "Books");
-    console.log(this.state.noResults, "No Result");
-    console.log(this.state.emptyText, "Empty String");
     return (
       <div className="search-books">
         <div className="search-books-bar">

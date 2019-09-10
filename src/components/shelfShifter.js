@@ -11,7 +11,7 @@ class ShelfShifter extends React.Component {
     for (let bookie of allBooks) {
       if (bookie.id === book.id) {
         currentState = bookie.shelf;
-        console.log(currentState);
+
         break;
       }
     }
