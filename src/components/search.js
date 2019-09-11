@@ -20,34 +20,36 @@ class SearchBar extends React.Component {
       this.setState({
         searchedBooks: []
       });
+      return;
     }
+    this.onSubmitHandler();
   };
 
   onSubmitHandler = e => {
-    e.preventDefault();
-    this.state.text !== ""
-      ? BooksAPI.search(this.state.text).then(books => {
-          books.length > 0
-            ? this.setState({
-                searchedBooks: books,
-                noResults: false,
-                emptyText: false
-              })
-            : this.setState({
-                searchedBooks: [],
-                noResults: true,
-                emptyText: false
-              });
-        })
-      : this.setState({
+    BooksAPI.search(this.state.text).then(books => {
+      if (
+        books !== undefined &&
+        books.error !== "empty query" &&
+        this.state.text !== ""
+      ) {
+        this.setState({
+          searchedBooks: books,
+          noResults: false,
+          emptyText: false
+        });
+      } else {
+        this.setState({
           searchedBooks: [],
           noResults: true,
-          emptyText: true
+          emptyText: false
         });
+      }
+    });
   };
 
   render() {
     const { allBooks, shelfShift } = this.props;
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -57,14 +59,12 @@ class SearchBar extends React.Component {
             </button>
           </Link>
           <div className="search-books-input-wrapper">
-            <form onSubmit={this.onSubmitHandler}>
-              <input
-                type=""
-                placeholder="Search by title or author"
-                value={this.state.text}
-                onChange={this.onChangeHandler}
-              />
-            </form>
+            <input
+              type=""
+              placeholder="Search by title or author"
+              value={this.state.text}
+              onChange={this.onChangeHandler}
+            />
           </div>
         </div>
 
